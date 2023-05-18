@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage[utf8]{inputenc}
 \usepackage{fancyhdr}
 
@@ -68,6 +69,16 @@ O(N \lg N \lg \lg N).
 \]
 
 Both methods utilize the fast Fourier transformation (Cooley and Tukey \cite{cooley}; independently, D.\ Knuth also had the idea of utilizing the fast Fourier transformation for multiplying large numbers). Its usage is suggested by the fact that the multiplication of two numbers, apart from carrying out the carries, is a convolution. Therefore, if the two binary numbers to be multiplied are arranged as strings of suitable length and these strings are interpreted as elements of a ring R, which allows for performing the necessary calculations with the strings in a faithful representation and also includes the required primitive roots of unity, the desired ``large" multiplication can be decomposed into the Fourier transformation of the two string sequences, component-wise multiplication of the transformed sequences, inverse transformation, and carrying out the carries. The resulting ``small" multiplications are treated analogously. This leads to a recursive nesting of routines of the described nature.
+
+In our first method, we take $R = \mathbb{C}$ as the field of complex numbers, the string length is approximately $\lg N$, and we achieve an effort of $O(N \lg N(\lg \lg N)^{1 + \varepsilon})$ by nesting three times.
+
+In our second method, we use the residue class ring $\mathbb{Z}_{F_n}$ of $\mathbb{Z}$ modulo a Fermat number $2^{2^n} + 1$, where the string length is $\approx \sqrt{N}$, and we nest approximately $\lg \lg N$ levels. The crucial advantage of Fermat numbers $F_n$ is that 2 is a primitive $2^{n+1}$-th root of unity modulo $F_n$, and its power residues have extremely simple binary representations, so the multiplication with these roots of unity is negligible.
+
+The implementation of the second method using a logical network can be done with a depth (which determines the time complexity) of $O(\lg N)$. However, we do not go into further detail on this. The order of magnitude of $\lg N$ for the depth is naturally the best possible.
+
+We do not believe that the order of magnitude $N \lg N \lg(\lg N)$ for the effort is optimal, but we suspect that the order of magnitude $N \lg N$ is optimal (cf. the deeper result of \cite{cook2}). Unfortunately, the online restriction for logical networks is unacceptable, and for computation on Turing machines, it is too strict in any case, as none of the mentioned methods, except for the school method, operates online).
+
+In the next section, we introduce the fast Fourier transformation in the form we will need it later. In the third section, we outline the simpler method using $R = \mathbb{C}$, and in the fourth section, we extensively discuss the method using $R = \mathbb{Z}_{F_n}$.
 
 \begin{thebibliography}{99}
 \bibitem{cook1} Cook, S. A.: \textit{On the Minimum Computation Time of Functions.} Dissertation, Harvard University (1966).
