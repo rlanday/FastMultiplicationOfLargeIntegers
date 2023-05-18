@@ -1,4 +1,5 @@
 \documentclass{article}
+\usepackage{amsmath}
 \usepackage[utf8]{inputenc}
 \usepackage{fancyhdr}
 
@@ -37,9 +38,40 @@ O\left(N^{\lg 3}\right)
 \]
 elements ($\lg 3 \approx 1.58$). The method easily extends to Turing machines without difficulty.
 
+Another surprising result was presented in the following year by Toom [7], in which a network for multiplying N-digit binary numbers with
+\[
+O(N 2^{\, \text{const} \sqrt{\lg N}})
+\] logical elements was proposed.
+
+Independently of Toom and using a completely different method, Schönhage \cite{schoenhage} showed in 1966 that $N$-digit numbers can be multiplied on a Turing machine with an effort of
+\[
+O\left(N 2^{\sqrt{2 \lg N}} (\lg N)^{3 / 2}\right)
+\]
+
+Subsequently, the Toom algorithm was also adapted to Turing machines (Cook \cite{cook2}), albeit with an increased effort of
+\[
+O\left(N 2^{\sqrt{2 \lg N}} (\lg N)\right)
+\]
+(Cook \cite{cook1} and Knuth \cite{knuth}, page 273).
+
+The significantly different methods of Toom and Schönhage thus practically yield the same effort, which has led to speculations about its near optimality.
+
+The interested reader is recommended to refer to Chapter 4 of Knuth's brilliant one-man encyclopedia, ``The Art of Computer Programming," where the results mentioned here are presented and proven in detail.
+
+In this work, two methods for multiplying N-digit binary numbers are presented, which can be implemented using both logical networks and Turing machines. The effort of one method is:
+\[
+O(N \lg N (\lg \lg N)^{1 + \varepsilon}),
+\]
+whilst the effort of the other method is
+\[
+O(N \lg N \lg \lg N).
+\]
+
+Both methods utilize the fast Fourier transformation (Cooley and Tukey \cite{cooley}; independently, D.\ Knuth also had the idea of utilizing the fast Fourier transformation for multiplying large numbers). Its usage is suggested by the fact that the multiplication of two numbers, apart from carrying out the carries, is a convolution. Therefore, if the two binary numbers to be multiplied are arranged as strings of suitable length and these strings are interpreted as elements of a ring R, which allows for performing the necessary calculations with the strings in a faithful representation and also includes the required primitive roots of unity, the desired ``large" multiplication can be decomposed into the Fourier transformation of the two string sequences, component-wise multiplication of the transformed sequences, inverse transformation, and carrying out the carries. The resulting ``small" multiplications are treated analogously. This leads to a recursive nesting of routines of the described nature.
+
 \begin{thebibliography}{99}
-\bibitem{cool1} Cook, S. A.: \textit{On the Minimum Computation Time of Functions.} Dissertation, Harvard University (1966).
-\bibitem{cool2} Cook, S. A., and S. O. Aanderaa: \textit{On the Minimum Computation Time of Functions.} Trans. AMS 142, 291--314 (1969).
+\bibitem{cook1} Cook, S. A.: \textit{On the Minimum Computation Time of Functions.} Dissertation, Harvard University (1966).
+\bibitem{cook2} Cook, S. A., and S. O. Aanderaa: \textit{On the Minimum Computation Time of Functions.} Trans. AMS 142, 291--314 (1969).
 \bibitem{cooley} Cooley, J. W., and J. W. Tukey: \textit{An Algorithm for the Machine Calculation of Complex Fourier Series.} Math. Comp. 19, 297--301 (1965).
 \hyphenation{Rechen-automaten}
 \bibitem{karatsuba} Karatsuba, A., and J. Ofman: \textit{Multiplication of Many-Digital Numbers by Automatic Computers (Russian).} Dokl. Akad. Nauk SSSR 145, 293--294 (1962).
