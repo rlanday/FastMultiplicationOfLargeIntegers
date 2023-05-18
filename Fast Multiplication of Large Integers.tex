@@ -1,0 +1,50 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+
+\fancypagestyle{plain}{%
+  \fancyhf{}% Clear header/footer
+  \fancyhead[L]{Computing 7, 281--292 (1971) \\ \copyright\ by Springer-Verlag 1971}%
+  \renewcommand{\headrulewidth}{0pt}% No header rule
+}
+
+% Use number for \thanks footnote
+\makeatletter
+\let\@fnsymbol\@arabic
+\makeatother
+
+\begin{document}
+\title{Fast Multiplication of Large Integers}
+\author{\textbf{A.\ Schönhage,} Konstanz \\ und \\ \textbf{V.\ Strassen}, Zürich\footnote{Part of the research of the second author was done at the Departtment of Statistics, University of California, Berkeley. He wishes to thank the National Science Foundation for their support (NSF GP-7454).}}
+\date{\textit{(Received on July 8, 1970)}}
+\renewcommand{\thefootnote}{\arabic{footnote}}
+\maketitle
+\begin{center}
+\textbf{Summary}
+\end{center}
+
+\textbf{Fast Multiplication of Large Numbers.} An algorithm is given for computing the product of two $N$-digit binary numbers by $O(N \lg N \lg \lg N)$. Two ways of implementing the algorithm are considered: multitape Turing machines and logical nets (with step = binary logical element.)
+
+\section{Introduction}
+
+The school method for multiplying two decimal numbers can be easily adapted for the multiplication of $N$-digit binary numbers using a Turing machine with multiple tapes or in a logical network (constructed from two-digit logical elements). In both cases, the computational effort is of the order of $N$. Here, we define the effort of a network as the number of its elements.
+
+For a Turing machine that performs multiplication of numbers of arbitrary length, the effort of multiplying N-digit numbers is defined as the maximum number of head movements over all input pairs of length $N$.
+
+The prevailing and intuitively plausible belief that the effort required by the school method cannot be significantly reduced was refuted in 1962 by A.\ Karatsuba \cite{karatsuba}, who constructed a network with
+\[
+O\left(N^{\lg 3}\right)
+\]
+elements ($\lg 3 \approx 1.58$). The method easily extends to Turing machines without difficulty.
+
+\begin{thebibliography}{99}
+\bibitem{cool1} Cook, S. A.: \textit{On the Minimum Computation Time of Functions.} Dissertation, Harvard University (1966).
+\bibitem{cool2} Cook, S. A., and S. O. Aanderaa: \textit{On the Minimum Computation Time of Functions.} Trans. AMS 142, 291--314 (1969).
+\bibitem{cooley} Cooley, J. W., and J. W. Tukey: \textit{An Algorithm for the Machine Calculation of Complex Fourier Series.} Math. Comp. 19, 297--301 (1965).
+\hyphenation{Rechen-automaten}
+\bibitem{karatsuba} Karatsuba, A., and J. Ofman: \textit{Multiplication of Many-Digital Numbers by Automatic Computers (Russian).} Dokl. Akad. Nauk SSSR 145, 293--294 (1962).
+\bibitem{knuth} Knuth, D. E.: \textit{The Art of Computer Programming. Vol. 2: Seminumerical Algorithms, Chapter 4: Arithmetic.} Addison-Wesley, 1969.
+\bibitem{schoenhage} Schönhage, A.: \textit{Multiplikation großer Zahlen.} Computing 1, 182--196 (1966).
+\bibitem{toom} Toom, A. L.: \textit{The complexity of a scheme of functional elements realizing the multiplication of integers.} Dokl. Akad. Nauk SSSR 150, 496--498 (1963).
+\end{thebibliography}
+\end{document}
