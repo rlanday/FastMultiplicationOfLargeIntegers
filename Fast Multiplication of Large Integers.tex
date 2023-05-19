@@ -3,11 +3,14 @@
 \usepackage{amssymb}
 \usepackage[utf8]{inputenc}
 \usepackage{fancyhdr}
+\usepackage{mathtools} % rcases
 
 \fancypagestyle{plain}{%
   \fancyhf{}% Clear header/footer
   \fancyhead[L]{Computing 7, 281--292 (1971) \\ \copyright\ by Springer-Verlag 1971}%
   \renewcommand{\headrulewidth}{0pt}% No header rule
+  \setlength{\headheight}{23.10004pt}
+  \addtolength{\topmargin}{-11.10004pt}
 }
 
 % Use number for \thanks footnote
@@ -18,7 +21,7 @@
 \begin{document}
 \title{Fast Multiplication of Large Integers}
 \author{\textbf{A.\ Schönhage,} Konstanz \\ und \\ \textbf{V.\ Strassen}, Zürich\footnote{Part of the research of the second author was done at the Departtment of Statistics, University of California, Berkeley. He wishes to thank the National Science Foundation for their support (NSF GP-7454).}}
-\date{\textit{(Received on July 8, 1970)}}
+\date{\textit{(Received on July 8, 1970)} \\ \bigskip English translation by Ryan Landay \\ May 19, 2023}
 \renewcommand{\thefootnote}{\arabic{footnote}}
 \maketitle
 \begin{center}
@@ -79,6 +82,167 @@ The implementation of the second method using a logical network can be done with
 We do not believe that the order of magnitude $N \lg N \lg(\lg N)$ for the effort is optimal, but we suspect that the order of magnitude $N \lg N$ is optimal (cf. the deeper result of \cite{cook2}). Unfortunately, the online restriction for logical networks is unacceptable, and for computation on Turing machines, it is too strict in any case, as none of the mentioned methods, except for the school method, operates online).
 
 In the next section, we introduce the fast Fourier transformation in the form we will need it later. In the third section, we outline the simpler method using $R = \mathbb{C}$, and in the fourth section, we extensively discuss the method using $R = \mathbb{Z}_{F_n}$.
+
+\section{Fast Fourier Transform}
+Let $R$ be a commutative ring with 1, $w_n \in R$ be a $2^n$-th root of unity with $w_n^{2^{n - 1}} = -1$, and $2 = 1 + 1$ be a unit in $R$.
+
+Then the transformation
+\[
+\tag{2.1}
+\hat{a}_k = \sum_{j = 0}^{2^n - 1} a_j w_n^{jk} \quad (0 \le k < 2^n)
+\]
+which assigns to each vector $a \in R^{2n}$ its Fourier transform $\hat{a}$, can be decomposed into individual steps according to the following scheme.
+
+\[
+\tag{2.2}
+k = \sum_{v = 0}^{n - 1} k_v 2^v, \quad j = \sum_{v = 0}^{n - 1} j_v 2^{n - 1 - v} \quad (k_v, j_v = 0\text{ or }1)
+\]
+
+\[
+\tag{2.3}
+A_0 (j_0, \ldots, j_{n - 1}) = a_j \quad (0 \le j < 2^n)
+\]
+
+\[
+A_v + 1 (k_0, \ldots, k_v, j_{v + 1}, \ldots, j_{n - 1}) =
+\]
+\[
+\tag{2.4}
+= \sum_{j_v = 0}^1 A_v (k_0, \ldots, k_{v - 1}, j_v, \ldots, j_{n - 1}) w_n^{j_v 2^{n - 1 - v} (k_v 2^v + \ldots + k_0 2^0)}
+\]
+
+\[
+\tag{2.5}
+\begin{rcases}
+& A_{v + 1}(\ldots, k_{v -1}, 0, j_{v + 1}, \ldots) = \\
+&= A_v(\ldots, k_{v - 1}, 0, j_{v + 1}, \ldots) + A_v (\ldots, k_{v - 1}, 1, j_{v + 1}, \ldots), w_n^x \\
+& A_{v + 1}(\ldots, k_{v -1}, 1, j_{v + 1}, \ldots) = \\
+&= A_v(\ldots, k_{v - 1}, 0, j_{v + 1}, \ldots) - A_v (\ldots, k_{v - 1}, 1, j_{v + 1}, \ldots), w_n^x \\
+\end{rcases}
+\]
+with $x = 2^{n - 1 - v} (k_{v - 1} 2^{v - 1} + \ldots + k_0 2^0)$.
+
+\[
+w_n^{\left(j_0 2^{n - 1} + \ldots + j_{v - 1} 2^{n - v}\right)} k_v 2^v = 1
+\]
+
+\[
+A_{v + 1} \left(k_0, \ldots, k_v, j_{v + 1}, \ldots, j_{n - 1}\right) =
+\]
+\[
+\sum_{j_v = 0}^1 \ldots \sum_{j_0 = 0}^1 a_j w_n^{\left(j_0 2^{n - 1} + \ldots + j_v 2^{n - 1 - v}\right)\left(k_v 2^v + \ldots + k_0 2^0\right)}.
+\]
+
+\[
+\tag{2.6}
+A_n (k_0, \ldots, k_{n - 1}) = \hat{a}_k.
+\]
+
+\[
+\tag{2.7}
+\begin{rcases}
+&A_v(\ldots, k_{v - 1}, 0, j_{v + 1}, \ldots) = \\
+&= 2^{-1} \left(A_{v + 1}\left(\ldots, k_{v - 1}, 0, j_{v + 1}, \ldots\right) + A_{v + 1}\left(\ldots, k_{v - 1}, 1, j_{v + 1}, \ldots\right)\right) \\
+&A_v(\ldots, k_{v - 1}, 1, j_{v + 1}, \ldots) = \\
+&= 2^{-1} \cdot w_n^{-x} \left(A_{v + 1}\left(\ldots, k_{v - 1}, 0, j_{v + 1}, \ldots\right) - A_{v + 1}\left(\ldots, k_{v - 1}, 1, j_{v + 1}, \ldots\right)\right) \\
+\end{rcases}
+\] with $x = 2^{n - 1 - v}(k_{v - 1} 2^{v - 1} + \ldots + k_0 2^0)$.
+
+\begin{align*}
+\tag{2.8}
+A_1(1, j_1, \ldots, j_{n - 1}) &= A_0(0, j_1,, \ldots, j_{n - 1}) - A_0(1, j_1, \ldots, j_{n - 1})  = \\
+&= a_j - a_{j + 2^{n - 1}}
+\end{align*}
+
+\section{Multiplication using complex numbers}
+\[
+\tag{3.1}
+l \cdot 2^n \ge 2N
+\]
+
+\[
+\tag{3.2}
+a = \sum_{j = 0}^{2^n - 1} a_j 2^{jl}, \quad b = \sum_{j = 0}^{2^n - 1} b_j 2^{jl}
+\] with $0 \le a_j < 2^l$, $0 \le b_j < 2^l$ and $a_j = b_j = 0$ for $j \ge 2^{n - 1}$.
+
+\[
+\tag{3.3}
+\begin{gathered}
+c = ab = \sum_{\tau = 0}^{2^n - 1} c_\tau 2^{\tau l} \\
+\text{with }c_\tau = \sum_{\varrho + \sigma = \tau} a_\varrho b_\sigma = \sum_{\varrho + \sigma \equiv \tau \pmod{2^n}} a_\varrho b_\sigma,
+\end{gathered}
+\]
+
+\[
+\tag{3.4}
+\begin{gathered}
+\hat{a}_k \hat{b}_k = \left(\sum_{\varrho = 0}^{2^n - 1} a_\varrho w_n^{\varrho k}\right) \left(\sum_{\sigma = 0}^{2^n - 1} b_\sigma w_n^{\sigma k}\right) = \sum_{\tau = 0}^{2^n - 1} c_\tau w_n^{\tau k} = \hat{c}_k \quad (0 \le k < 2^n).
+\end{gathered}
+\]
+
+\[
+\begin{gathered}
+|A_v(\ldots)| < 2^{l + v}, |B_v(\ldots)| < 2^{l + v}, |\hat{a}_k| < 2^{l + n}, |\hat{b}_k| < 2^{l + n}, \\
+|\hat{c}_k| < 2^{2l + 2n}, |C_v(\ldots)| < 2^{2l + 2n}.
+\end{gathered}
+\]
+
+\[
+\omega_{n, x}\text{ with }|\omega_{n, x} - w_n^x| < 2^{-s}\text{ for }|x| < 2^{n - 1}
+\]
+
+\[
+\begin{gathered}
+\alpha_v (\ldots) \approx 2^{-l - v} A_v(\ldots), \quad \beta_v(\ldots) \approx 2^{-l - v} B_v(\ldots), \\
+\gamma_v(\ldots) \approx 2^{-2l - 2n} C_v (\ldots).
+\end{gathered}
+\]
+
+\[
+\left|2^{2l + 2n} \gamma_0 (j_0, \ldots, j_{n - 1}) - c_j\right| \le \text{const} \cdot n \cdot 2^{2l + 2n - s} < \frac{1}{2},
+\]
+
+\[
+\tag{3.9}
+s \ge 2l + 2n + \lg n + \text{const}
+\]
+
+\[
+\begin{gathered}
+w_1 = -1, \quad w_2 = i, \quad w_{v + 1} = \frac{1 + w_v}{|1 + w_v|}\text{ for }v \ge 2,\\
+w_{v + 1}^{2 x} = w_v^x, \quad w_{v + 1}^{2x + 1} = w_{v + 1} \cdot w_v^x
+\end{gathered}
+\]
+
+\[
+M_{m + 1}(N) = O(2^n (s^2 + n M_m(s) + ns + 2l + n))
+\]
+
+\[
+\tag{3.10}
+M_{m + 1}(N) = O(2^n((l + n)^2 + nM_m(3(l + n)))).
+\]
+
+\[
+M_1(N) = O(2^n \cdot n(l + n)^2).
+\]
+
+\[
+l = \lceil \lg N \rceil, \quad n = \left\lceil \lg\left(\frac{2N}{l}\right)\right\rceil
+\]
+
+\[
+\tag{3.11}
+M_1(N) = O(N (\lg N)^2).
+\]
+
+\[
+M_2(N) = O(N \lg N (\lg \lg N)^2).
+\]
+
+\[
+M_3(N) = O(N \lg N \lg \lg N (\lg \lg \lg N)^2)
+\]
 
 \begin{thebibliography}{99}
 \bibitem{cook1} Cook, S. A.: \textit{On the Minimum Computation Time of Functions.} Dissertation, Harvard University (1966).
