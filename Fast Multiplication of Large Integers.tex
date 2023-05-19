@@ -115,12 +115,12 @@ A_v + 1 (k_0, \ldots, k_v, j_{v + 1}, \ldots, j_{n - 1}) =
 \tag{2.5}
 \begin{rcases}
 & A_{v + 1}(\ldots, k_{v -1}, 0, j_{v + 1}, \ldots) = \\
-&= A_v(\ldots, k_{v - 1}, 0, j_{v + 1}, \ldots) + A_v (\ldots, k_{v - 1}, 1, j_{v + 1}, \ldots), w_n^x \\
+&= A_v(\ldots, k_{v - 1}, 0, j_{v + 1}, \ldots) + A_v (\ldots, k_{v - 1}, 1, j_{v + 1}, \ldots), w_n^\varkappa \\
 & A_{v + 1}(\ldots, k_{v -1}, 1, j_{v + 1}, \ldots) = \\
-&= A_v(\ldots, k_{v - 1}, 0, j_{v + 1}, \ldots) - A_v (\ldots, k_{v - 1}, 1, j_{v + 1}, \ldots), w_n^x \\
+&= A_v(\ldots, k_{v - 1}, 0, j_{v + 1}, \ldots) - A_v (\ldots, k_{v - 1}, 1, j_{v + 1}, \ldots), w_n^\varkappa \\
 \end{rcases}
 \]
-with $x = 2^{n - 1 - v} (k_{v - 1} 2^{v - 1} + \ldots + k_0 2^0)$.
+with $\varkappa = 2^{n - 1 - v} (k_{v - 1} 2^{v - 1} + \ldots + k_0 2^0)$.
 
 \[
 w_n^{\left(j_0 2^{n - 1} + \ldots + j_{v - 1} 2^{n - v}\right)} k_v 2^v = 1
@@ -144,9 +144,9 @@ A_n (k_0, \ldots, k_{n - 1}) = \hat{a}_k.
 &A_v(\ldots, k_{v - 1}, 0, j_{v + 1}, \ldots) = \\
 &= 2^{-1} \left(A_{v + 1}\left(\ldots, k_{v - 1}, 0, j_{v + 1}, \ldots\right) + A_{v + 1}\left(\ldots, k_{v - 1}, 1, j_{v + 1}, \ldots\right)\right) \\
 &A_v(\ldots, k_{v - 1}, 1, j_{v + 1}, \ldots) = \\
-&= 2^{-1} \cdot w_n^{-x} \left(A_{v + 1}\left(\ldots, k_{v - 1}, 0, j_{v + 1}, \ldots\right) - A_{v + 1}\left(\ldots, k_{v - 1}, 1, j_{v + 1}, \ldots\right)\right) \\
+&= 2^{-1} \cdot w_n^{-\varkappa} \left(A_{v + 1}\left(\ldots, k_{v - 1}, 0, j_{v + 1}, \ldots\right) - A_{v + 1}\left(\ldots, k_{v - 1}, 1, j_{v + 1}, \ldots\right)\right) \\
 \end{rcases}
-\] with $x = 2^{n - 1 - v}(k_{v - 1} 2^{v - 1} + \ldots + k_0 2^0)$.
+\] with $\varkappa = 2^{n - 1 - v}(k_{v - 1} 2^{v - 1} + \ldots + k_0 2^0)$.
 
 \begin{align*}
 \tag{2.8}
@@ -188,7 +188,7 @@ c = ab = \sum_{\tau = 0}^{2^n - 1} c_\tau 2^{\tau l} \\
 \]
 
 \[
-\omega_{n, x}\text{ with }|\omega_{n, x} - w_n^x| < 2^{-s}\text{ for }|x| < 2^{n - 1}
+\omega_{n, x}\text{ with }|\omega_{n, \varkappa} - w_n^\varkappa| < 2^{-s}\text{ for }|\varkappa| < 2^{n - 1}
 \]
 
 \[
@@ -210,7 +210,7 @@ s \ge 2l + 2n + \lg n + \text{const}
 \[
 \begin{gathered}
 w_1 = -1, \quad w_2 = i, \quad w_{v + 1} = \frac{1 + w_v}{|1 + w_v|}\text{ for }v \ge 2,\\
-w_{v + 1}^{2 x} = w_v^x, \quad w_{v + 1}^{2x + 1} = w_{v + 1} \cdot w_v^x
+w_{v + 1}^{2 \varkappa} = w_v^\varkappa, \quad w_{v + 1}^{2\varkappa + 1} = w_{v + 1} \cdot w_v^\varkappa
 \end{gathered}
 \]
 
@@ -242,6 +242,184 @@ M_2(N) = O(N \lg N (\lg \lg N)^2).
 
 \[
 M_3(N) = O(N \lg N \lg \lg N (\lg \lg \lg N)^2)
+\]
+
+\section{Use of Fermat numbers}
+\[
+F_n = 2^{2^n} + 1.
+\]
+
+\[
+\tag{4.1}
+2N \le 2^n
+\]
+
+\[
+\tag{4.2}
+c \equiv ab \pmod{F_n}\text{ and }0 \le c < F_n
+\]
+
+\[
+\tag{4.3}
+x = \sum_{j = 0}^{2^{n + 1} - 1} x_j 2^j (x_j = 0\text{ or}= 1)
+\]
+
+\[
+\tag{4.4}
+2^{2^{n + 1}} \equiv 1 \pmod{F_n}
+\]
+
+\[
+2^\varkappa \cdot x = \sum_{j = 0}^{2^{n + 1} - 1} x_j \cdot 2^{j + \varkappa} \equiv \sum_{k = 0}^{2^{n + 1} - 1} y _k 2^k \pmod{F_n}
+\] with $x_j = y_k$ for $j + \varkappa \equiv k \pmod {2^{n + 1}}$
+
+\[
+\tag{4.5}
+x = u + v \cdot 2^{2^n}, \quad 0 \le u < 2^{2^n}, \quad 0 \le v < 2^{2^n}
+\]
+
+\[
+\xi \equiv x \pmod{F_n}, \quad 0 \le \eta \le 2^{2^n}
+\]
+
+\[
+\tag{4.6}
+\xi \coloneq
+\begin{cases}
+u - v, & \text{if }v \le u,\\
+2^{2^n} + 1 + u - v, & \text{if }v > u
+\end{cases}
+\]
+
+\[
+\tag{4.7}
+\begin{cases}
+z \equiv \xi \pmod{F_n}, & 0 \le \xi \le 2^{2^n}, \\
+z \equiv \eta \pmod{2^{n + 2}}, & 0 \le \eta < 2^{n + 2}, \\
+0 \le z < 2^{n + 2} F_n
+\end{cases}
+\]
+
+\[
+\delta \equiv \eta - \xi \pmod{2^{n + 2}}\text{ with }0 \le \delta < 2^{n + 2}
+\]
+
+\[
+z = \xi + \delta\left(2^{2^n} + 1\right)
+\]
+
+\[
+\tag{4.8}
+m = 2n - 1\text{ or }m = 2n - 2
+\]
+
+\[
+\tag{4.9}
+a = \sum_{\varrho = 0}^{2^{n + 1} - 1} a_\varrho 2^{\varrho \cdot 2^{n - 1}}, \quad b = \sum_{\sigma = 0}^{2^{n + 1} - 1} b_\sigma 2^{\sigma \cdot 2^{n - 1}}, \quad 0 \le a_\varrho, b_\sigma < 2^{2^{n - 1}}
+\]
+
+\[
+ab \equiv \sum_{\tau = 0}^{2^{n + 1} - 1} c_\tau 2^{tau 2^{n - 1}} \pmod{F_m}
+\]
+with
+\[
+\tag{4.10}
+c_\tau = \mathop{\sum_{\varrho + \sigma \equiv \tau \pmod{2^{n + 1}}}}_{0 \le \varrho, \sigma < 2^{n + 1}} a_\varrho b_\sigma < 2^{n + 1 + 2^n}
+\]
+
+\[
+2^{2^n} \cdot 2^{n - 1} = 2^{2^m} \equiv -1 \pmod{F_m}
+\]
+
+\[
+ab \equiv \sum_{j = 0}^{2^n - 1} \left(c_j - c_{j + 2^n} + 2^{n + 1 + 2^n}\right) 2^{j \cdot 2^{n - 1}} + \sum_{j = 2^n}^{2^{n + 1} - 1} 2^{n + 1 + 2^n} \cdot 2^{j \cdot 2^{n - 1}} \pmod{F_m}
+\]
+with
+\[
+\tag{4.11}
+z_j =
+\begin{cases}
+c_j - c_{j + 2^n} + 2^{n + 1 + 2^n} & \text{ for } 0 \le j < 2^n \\
+2^{n + 1 + 2^n} & \text{ for } 2^n \le j < 2^{n + 1}
+\end{cases}
+\]
+
+\[
+\tag{4.12}
+ab \equiv \sum_{j = 0}^{2^{n + 1} - 1} z_j 2^{j \cdot 2^{n - 1}} \pmod{F_m}.
+\]
+
+\[
+\alpha_j \equiv a_j, \quad \beta_j \equiv b_j \pmod{2^{n + 2}}, \quad 0 \le \alpha_j, \beta_j < 2^{n + 2}
+\]
+
+\[
+u = \sum_{\varrho = 0}^{2^{n + 1} - 1}, \quad v = \sum_{\sigma = 0}^{2^{n + 1} - 1} \beta_\sigma 2^{\sigma (3n + 5)},
+\]
+
+\[
+u, v < 2^{2^{n + 1}(3n + 5)}
+\]
+
+\[
+\gamma_\tau = \sum_{\varrho + \sigma = \tau} \alpha_\varrho \beta_\sigma < 2^{n + 1} \cdot \left(2^{n + 2}\right)^2, \quad 0 \le \tau < 2^{n + 2}.
+\]
+
+\[
+c_\tau \equiv \gamma_\tau + \gamma_{\tau + 2^{n + 1}} \pmod{2^{n + 2}},
+\]
+
+\[
+\tag{4.14}
+z_j \equiv \eta_j \pmod{2^{n + 2}}\text{ for }0 \le j < 2^n,
+\]
+
+\[
+\eta_j \equiv \gamma_j - \gamma_{j + 2^n} + \gamma_{j + 2 \cdot 2^n} - \gamma_{j + 3 \cdot 2^n} \pmod{2^{n + 2}}\text{ and }0 \le \eta_j < 2^{n + 2}.
+\]
+
+\[
+M_1(2^{n + 1} (3n + 5)) = O(2^n \cdot n^3) \le O(2^{2n})
+\]
+
+\[
+C_1(1, j_1, \ldots, j_n) \equiv c_j - c_{j + 2^n} \pmod{F_n}\text{ with }j = j_1 \cdot 2^{n - 1} + \ldots + j_n \cdot 2^0,
+\]
+
+\[
+\hat{a}_k \hat{b}_k \equiv \hat{c}_k \pmod{F_n}\text{ for odd }k < 2^{n + 1}
+\]
+
+\[
+\xi_j \equiv C_1(1, j_1, \ldots, j_n) + 2^{n + 1 + 2^n} \equiv z_j \pmod{F_n}, \quad 0 \le \xi_j \le 2^{2^n}.
+\]
+
+\[
+\tag{4.15}
+\begin{cases}
+M(2n - 2) \le 2^{n - 1} M(n) + \gamma_0 (n - 1) 2^{2n - 1} \\
+M (2n - 1) \le 2^n M(n) + \gamma_0 (n - 1) 2^{2n}
+\end{cases} \text{ for } n \ge 3.
+\]
+
+\[
+\gamma = \max \{M(1), M(2), M(3), \gamma_0\}
+\]
+
+\[
+M(n) \le \gamma k \cdot 2^{k + n}\text{ for } n \le 2^k + 1,
+\]
+
+\[
+M(n) = O(2^n n \lg n).
+\]
+
+\[
+n = \lceil \lg(2N)\rceil
+\]
+
+\[
+O(N \lg N \lg \lg N)
 \]
 
 \begin{thebibliography}{99}
