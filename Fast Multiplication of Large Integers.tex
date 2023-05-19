@@ -93,51 +93,61 @@ Then the transformation
 \]
 which assigns to each vector $a \in R^{2n}$ its Fourier transform $\hat{a}$, can be decomposed into individual steps according to the following scheme.
 
+For $k$ and $j$, the dual representations
+
 \[
 \tag{2.2}
 k = \sum_{v = 0}^{n - 1} k_v 2^v, \quad j = \sum_{v = 0}^{n - 1} j_v 2^{n - 1 - v} \quad (k_v, j_v = 0\text{ or }1)
 \]
+
+are used. Starting from
 
 \[
 \tag{2.3}
 A_0 (j_0, \ldots, j_{n - 1}) = a_j \quad (0 \le j < 2^n)
 \]
 
+$A_1, \ldots, A_n$ are defined recursively using
+
 \[
-A_v + 1 (k_0, \ldots, k_v, j_{v + 1}, \ldots, j_{n - 1}) =
+A_{v + } (k_0, \ldots, k_v, j_{v + 1}, \ldots, j_{n - 1}) =
 \]
 \[
 \tag{2.4}
 = \sum_{j_v = 0}^1 A_v (k_0, \ldots, k_{v - 1}, j_v, \ldots, j_{n - 1}) w_n^{j_v 2^{n - 1 - v} (k_v 2^v + \ldots + k_0 2^0)}
 \]
 
+or in a more detailed form, taking into account $w_n^{2^{n - 1}} = - 1$
+
 \[
 \tag{2.5}
 \begin{rcases}
 & A_{v + 1}(\ldots, k_{v -1}, 0, j_{v + 1}, \ldots) = \\
-&= A_v(\ldots, k_{v - 1}, 0, j_{v + 1}, \ldots) + A_v (\ldots, k_{v - 1}, 1, j_{v + 1}, \ldots), w_n^\varkappa \\
+&= A_v(\ldots, k_{v - 1}, 0, j_{v + 1}, \ldots) + A_v (\ldots, k_{v - 1}, 1, j_{v + 1}, \ldots) w_n^\varkappa \\
 & A_{v + 1}(\ldots, k_{v -1}, 1, j_{v + 1}, \ldots) = \\
-&= A_v(\ldots, k_{v - 1}, 0, j_{v + 1}, \ldots) - A_v (\ldots, k_{v - 1}, 1, j_{v + 1}, \ldots), w_n^\varkappa \\
+&= A_v(\ldots, k_{v - 1}, 0, j_{v + 1}, \ldots) - A_v (\ldots, k_{v - 1}, 1, j_{v + 1}, \ldots) w_n^\varkappa \\
 \end{rcases}
 \]
 with $\varkappa = 2^{n - 1 - v} (k_{v - 1} 2^{v - 1} + \ldots + k_0 2^0)$.
 
+From (2.3) and (2.4) and considering
+
 \[
 w_n^{\left(j_0 2^{n - 1} + \ldots + j_{v - 1} 2^{n - v}\right)} k_v 2^v = 1
 \]
-
+one obtains the closed form representation through induction
 \[
 A_{v + 1} \left(k_0, \ldots, k_v, j_{v + 1}, \ldots, j_{n - 1}\right) =
 \]
 \[
 \sum_{j_v = 0}^1 \ldots \sum_{j_0 = 0}^1 a_j w_n^{\left(j_0 2^{n - 1} + \ldots + j_v 2^{n - 1 - v}\right)\left(k_v 2^v + \ldots + k_0 2^0\right)}.
 \]
-
+According to (2.1) and (2.2), it follows in particular that
 \[
 \tag{2.6}
 A_n (k_0, \ldots, k_{n - 1}) = \hat{a}_k.
 \]
-
+The rule for the inverse transformation, mapping $\hat{a}$ to $a$, is obtained by solving (2.5):
 \[
 \tag{2.7}
 \begin{rcases}
@@ -148,11 +158,13 @@ A_n (k_0, \ldots, k_{n - 1}) = \hat{a}_k.
 \end{rcases}
 \] with $\varkappa = 2^{n - 1 - v}(k_{v - 1} 2^{v - 1} + \ldots + k_0 2^0)$.
 
+At a later point, the following fact is essential: according to (2.3) and (2.4), specifically for $0 \le j < 2^{n - 1}$, we have:
 \begin{align*}
 \tag{2.8}
 A_1(1, j_1, \ldots, j_{n - 1}) &= A_0(0, j_1,, \ldots, j_{n - 1}) - A_0(1, j_1, \ldots, j_{n - 1})  = \\
 &= a_j - a_{j + 2^{n - 1}}
 \end{align*}
+Furthermore, the subsequent steps of the recursion (2.5), limited to $k_0 = 1$, lead from these differences to the $\hat{a}_k$ with odd values of $k$. Similarly, the differences (2.8) can be recovered solely from the $2^{n - 1}$ $\hat{a}_k$ with odd $k$, using (2.7) (restricted to $k_0 = 1$).
 
 \section{Multiplication using complex numbers}
 \[
