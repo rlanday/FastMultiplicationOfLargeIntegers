@@ -420,7 +420,7 @@ The computation of $\eta_j$ requires at most $O(2^{2n})$ operations, and the mul
 \[
 M_1(2^{n + 1} (3n + 5)) = O(2^n \cdot n^3) \le O(2^{2n})
 \]
-as estimated in (3.11). Here, we have used (3.11) for convenience, but any bound of the form $O(N^{2 - \varepsilon})$ would suffice, such as the one provided by Karatsuba (see Knuth \cite{knuth}, pages 258-259).
+as estimated in (3.11). Here, we have used (3.11) for convenience, but any bound of the form $O(N^{2 - \varepsilon})$ would suffice, such as the one provided by Karatsuba (see Knuth \cite{knuth}, pages 258--259).
 
 We perform the computation of $z_j \mod F_n$ using the Fourier transform in $\mathbb{Z}_{F_n}$ with $w_{n + 1} = 2$, following steps (3.5) to (3.7). However, it is important to note that instead of computing the values of $c_j$ as in (4.11), we only need to compute the $2^n$ differences $c_j - c_{j + 2^n} \pmod{F_n}$. Analogous to (2.8), these are the $2^{n + 1}$-digit numbers
 \[
