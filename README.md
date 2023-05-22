@@ -5,3 +5,14 @@ This is an English translation of Schönhage and Strassen classic 1971 paper “
 I was unable to find an English translation of this classic paper, so I made one myself by typing up the original equations in LaTeX and using ChatGPT to translate the text. Efficient multiplication algorithms (particularly for matrices, used extensively in AI technology) are currently of great importance to society. I am uploading this translation in the hopes that it allows others to enjoy and maybe even improve upon this classic paper.
 
 This translation is licensed under the CC BY license; however, the original paper may still be under copyright in your jurisdiction.
+
+Shield: [![CC BY 4.0][cc-by-shield]][cc-by]
+
+This work is licensed under a
+[Creative Commons Attribution 4.0 International License][cc-by].
+
+[![CC BY 4.0][cc-by-image]][cc-by]
+
+[cc-by]: http://creativecommons.org/licenses/by/4.0/
+[cc-by-image]: https://i.creativecommons.org/l/by/4.0/88x31.png
+[cc-by-shield]: https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg
