@@ -1,9 +1,10 @@
 \documentclass{article}
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
 \usepackage{fancyhdr}
 \usepackage{mathtools} % rcases
+\usepackage[utf8]{inputenc}
 
 \fancypagestyle{plain}{%
   \fancyhf{}% Clear header/footer
@@ -20,8 +21,8 @@
 
 \begin{document}
 \title{Fast Multiplication of Large Integers}
-\author{\textbf{A.\ Schönhage,} Konstanz \\ und \\ \textbf{V.\ Strassen}, Zürich\footnote{Part of the research of the second author was done at the Departtment of Statistics, University of California, Berkeley. He wishes to thank the National Science Foundation for their support (NSF GP-7454).}}
-\date{\textit{(Received on July 8, 1970)} \\ \bigskip English translation by Ryan Landay \\ May 19, 2023}
+\author{\textbf{A.\ Schönhage,} Konstanz \\ und \\ \textbf{V.\ Strassen}, Zürich\footnote{Part of the research of the second author was done at the Department of Statistics, University of California, Berkeley. He wishes to thank the National Science Foundation for their support (NSF GP-7454).}}
+\date{\textit{(Received on July 8, 1970)} \\ \bigskip English translation by Ryan Landay \\ May 22, 2023}
 \renewcommand{\thefootnote}{\arabic{footnote}}
 \maketitle
 \begin{center}
@@ -167,16 +168,21 @@ A_1(1, j_1, \ldots, j_{n - 1}) &= A_0(0, j_1,, \ldots, j_{n - 1}) - A_0(1, j_1, 
 Furthermore, the subsequent steps of the recursion (2.5), limited to $k_0 = 1$, lead from these differences to the $\hat{a}_k$ with odd values of $k$. Similarly, the differences (2.8) can be recovered solely from the $2^{n - 1}$ $\hat{a}_k$ with odd $k$, using (2.7) (restricted to $k_0 = 1$).
 
 \section{Multiplication using complex numbers}
+In this section, we describe a method for constructing fast multiplication algorithms using the fast Fourier transformation in the ring $R = \mathbb{C}$ of complex numbers. Starting with the elementary method $V_0$ based on the traditional approach, we use this construction to obtain successively faster algorithms $V_1, V_2, \ldots$ Assuming the existence of $V_m$, we need to specify how the $2N$-digit product $c = a b$ is computed in the $N$-digit binary representation for positive integers $a \ge 0$, $b \ge 0$ when using the method $V_{m+1}$.
+
+Starting with natural numbers $l$ and $n$, which will later be chosen appropriately depending on $N$ while satisfying the condition
 \[
 \tag{3.1}
 l \cdot 2^n \ge 2N
 \]
-
+the factors $a$ and $b$ are decomposed as
 \[
 \tag{3.2}
 a = \sum_{j = 0}^{2^n - 1} a_j 2^{jl}, \quad b = \sum_{j = 0}^{2^n - 1} b_j 2^{jl}
-\] with $0 \le a_j < 2^l$, $0 \le b_j < 2^l$ and $a_j = b_j = 0$ for $j \ge 2^{n - 1}$.
-
+\]\[
+\text{where $0 \le a_j < 2^l$, $0 \le b_j < 2^l$ and $a_j = b_j = 0$ for $j \ge 2^{n - 1}$}
+\]
+into sections of length $l$. The product is then expressed as
 \[
 \tag{3.3}
 \begin{gathered}
@@ -184,77 +190,87 @@ c = ab = \sum_{\tau = 0}^{2^n - 1} c_\tau 2^{\tau l} \\
 \text{with }c_\tau = \sum_{\varrho + \sigma = \tau} a_\varrho b_\sigma = \sum_{\varrho + \sigma \equiv \tau \pmod{2^n}} a_\varrho b_\sigma,
 \end{gathered}
 \]
-
+This means that $c_\tau$ is obtained by folding the $a_\varrho$ with the $b_\sigma$. The Fourier transformation described in section 2, with $w_n = e^{2 \pi i \cdot 2^{-n}}$, converts this folding into $2^n$ multiplications, namely
 \[
 \tag{3.4}
 \begin{gathered}
 \hat{a}_k \hat{b}_k = \left(\sum_{\varrho = 0}^{2^n - 1} a_\varrho w_n^{\varrho k}\right) \left(\sum_{\sigma = 0}^{2^n - 1} b_\sigma w_n^{\sigma k}\right) = \sum_{\tau = 0}^{2^n - 1} c_\tau w_n^{\tau k} = \hat{c}_k \quad (0 \le k < 2^n).
 \end{gathered}
 \]
-
+The procedure $V_{m+1}$ can be outlined in broad terms as follows:
+\begin{enumerate}[labelindent=0pt=0pt]
+\item[(3.5)] Transition from the $a_\varrho$ to the $\hat{a}_k$ and correspondingly from the $b_\sigma$ to the $\hat{b}_k$ according to (2.5);
+\item[(3.6)] Execution of the $2^n$ multiplications $\hat{a}_k \hat{b}_k = \hat{c}_k$;
+\item[(3.7)] Transition from the $\hat{c}_k$ to the $c_\tau$ according to (2.7);
+\item[(3.8)] Position-wise addition of the $c_\tau$ according to (3.3).
+\end{enumerate}
+To realize this plan in a finite manner, it is necessary to replace the complex numbers involved in steps (3.5) to (3.7) with sufficiently accurate numerical approximations. The rounding errors must be kept small enough so that the integer values $c_\tau$ can be computed up to an error of less than $\frac{1}{2}$ and determined exactly through rounding. In addition to the $A_v(\ldots)$ from step 2, corresponding quantities $B_v(\ldots)$ and $C_v(\ldots)$ arise when transitioning from $b_j$ to $\hat{b}_k$ and from $c_k$ to $c_\tau$. From $a_j < 2^l$ and $b_j < 2^l$, it follows according to (2.5) and (2.7)
 \[
 \begin{gathered}
 |A_v(\ldots)| < 2^{l + v}, |B_v(\ldots)| < 2^{l + v}, |\hat{a}_k| < 2^{l + n}, |\hat{b}_k| < 2^{l + n}, \\
 |\hat{c}_k| < 2^{2l + 2n}, |C_v(\ldots)| < 2^{2l + 2n}.
 \end{gathered}
 \]
-
+In order to perform the calculation using complex fixed-point arithmetic with one digit before the decimal point and a suitable number $s$ of digits after the decimal point, we use $s$-digit
 \[
-\omega_{n, x}\text{ with }|\omega_{n, \varkappa} - w_n^\varkappa| < 2^{-s}\text{ for }|\varkappa| < 2^{n - 1}
+\omega_{n, \varkappa}\text{ with }|\omega_{n, \varkappa} - w_n^\varkappa| < 2^{-s}\text{ for }|\varkappa| < 2^{n - 1}
 \]
-
+with scaled approximation values
 \[
 \begin{gathered}
 \alpha_v (\ldots) \approx 2^{-l - v} A_v(\ldots), \quad \beta_v(\ldots) \approx 2^{-l - v} B_v(\ldots), \\
 \gamma_v(\ldots) \approx 2^{-2l - 2n} C_v (\ldots).
 \end{gathered}
 \]
-
+From (2.5), (3.6), and (2.7), it is evident how to compute $\alpha_v$, $\beta_v$, and $\gamma_v$ considering these scalings. The complex multiplications involved are implemented using 4 multiplications of real $s$-digit numbers following the $V_m$ method, along with additional rounding-based additions to $s$ digits after the decimal point. The estimation of rounding errors yields:
 \[
 \left|2^{2l + 2n} \gamma_0 (j_0, \ldots, j_{n - 1}) - c_j\right| \le \text{const} \cdot n \cdot 2^{2l + 2n - s} < \frac{1}{2},
 \]
-
+provided that we choose:
 \[
 \tag{3.9}
 s \ge 2l + 2n + \lg n + \text{const}
 \]
-
+Now we can estimate the effort $M_{m + 1}(N)$ of the $V_{m+1}$ method by referring to $M_m(s)$ and using the complexity $O(s)$ for addition of $s$-digit numbers. The $\omega_{n, \varkappa}$ values can be permanently incorporated when using logical networks. When using multi-tape Turing machines, they need to be calculated beforehand. They are given by
 \[
 \begin{gathered}
 w_1 = -1, \quad w_2 = i, \quad w_{v + 1} = \frac{1 + w_v}{|1 + w_v|}\text{ for }v \ge 2,\\
 w_{v + 1}^{2 \varkappa} = w_v^\varkappa, \quad w_{v + 1}^{2\varkappa + 1} = w_{v + 1} \cdot w_v^\varkappa
 \end{gathered}
 \]
+using $O(2^n)$ operations such as addition, multiplication, division, and square root, and achieving accuracy to $s$ digits using elementary methods requires at most $O(2^n \cdot s^2)$ steps.
 
+The steps (8.5) and (3.7) in the previously described implementation incur a complexity of $O(2^n \cdot n(M_m(s) + s))$, (3.6) costs $O(2^n (M_m(s) + s))$, and finally (3.8) adds $O(2^n (2l + n))$. Thus, we have
 \[
 M_{m + 1}(N) = O(2^n (s^2 + n M_m(s) + ns + 2l + n))
 \]
-
+and by choosing the smallest possible $s$ under the condition (3.9), we obtain
 \[
 \tag{3.10}
 M_{m + 1}(N) = O(2^n((l + n)^2 + nM_m(3(l + n)))).
 \]
-
+For the school method $V_0$, we have $M_0(s) = O(s^2)$, so
 \[
 M_1(N) = O(2^n \cdot n(l + n)^2).
 \]
-
+By choosing, while satisfying (3.1),
 \[
 l = \lceil \lg N \rceil, \quad n = \left\lceil \lg\left(\frac{2N}{l}\right)\right\rceil
 \]
-
+we obtain for the method $V_1$ the complexity
 \[
 \tag{3.11}
 M_1(N) = O(N (\lg N)^2).
 \]
-
+Now we use this result in (3.10) for $m = 1$, with the same choice of $l$ and $n$, resulting in
 \[
 M_2(N) = O(N \lg N (\lg \lg N)^2).
 \]
-
+Continuing in this manner, we obtain
 \[
 M_3(N) = O(N \lg N \lg \lg N (\lg \lg \lg N)^2)
 \]
+and so on. We refrain from choosing the nesting degree $m$ in terms of $n$ since we will describe an even faster method in the next section.
 
 \section{Use of Fermat numbers}
 \[
